@@ -2,28 +2,34 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "real-time-risk-platform"
-        AWS_ACCESS_KEY_ID     = credentials('aws_access_key')
-        AWS_SECRET_ACCESS_KEY = credentials('aws_secret_key')
+        AWS_ACCESS_KEY_ID     = credentials('aws-access-key')
+        AWS_SECRET_ACCESS_KEY = credentials('aws-secret-key')
+        AWS_DEFAULT_REGION    = 'ap-south-1'
     }
 
     stages {
 
-        stage('Checkout Code') {
+        stage('Validate Workspace') {
             steps {
-                git branch: 'main', url: 'https://github.com/JoelChandanshiv/Bigdata-Devops.git'
+                sh 'ls -la'
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t $IMAGE_NAME .'
+                sh 'docker build -t real-time-risk-platform .'
             }
         }
 
         stage('Run Risk Pipeline') {
             steps {
-                sh 'docker run --rm $IMAGE_NAME'
+                sh '''
+                docker run --rm \
+                  -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
+                  -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
+                  -e AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION \
+                  real-time-risk-platform
+                '''
             }
         }
     }
