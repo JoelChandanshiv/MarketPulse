@@ -3,13 +3,15 @@ pipeline {
 
     environment {
         IMAGE_NAME = "real-time-risk-platform"
+        AWS_ACCESS_KEY_ID     = credentials('aws_access_key')
+        AWS_SECRET_ACCESS_KEY = credentials('aws_secret_key')
     }
 
     stages {
 
         stage('Checkout Code') {
             steps {
-                git branch: 'main', url: 'https://github.com/JoelChandanshiv/real-time-risk-platform.git'
+                git branch: 'main', url: 'https://github.com/JoelChandanshiv/Bigdata-Devops.git'
             }
         }
 
