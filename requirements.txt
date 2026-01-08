@@ -2,3 +2,5 @@ boto3
 pandas
 scikit-learn
 requests
+kafka-python
+websocket-client
