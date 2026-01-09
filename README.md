@@ -33,17 +33,35 @@ The architecture is designed with production principles in mind, ensuring that *
 
 ```mermaid
 graph TD
-    subgraph "Real-Time Streaming Flow"
+    %% Real-Time Section
+    subgraph "1. Real-Time Streaming Pipeline"
+        direction TB
         A[Binance WebSocket] --> B[Kafka Producer]
-        B --> C[Kafka Topic: market_prices]
+        B --> C{{"Kafka Topic: market_prices"}}
         C --> D[Streaming Consumer]
         D --> E[Feature Engineering]
         E --> F[Isolation Forest Inference]
-        F --> G[Kafka Topic: risk_alerts]
+        F --> G{{"Kafka Topic: risk_alerts"}}
     end
-```
 
-### Batch Risk Analysis Flow
+    %% Spacer (Invisible link to force vertical layout)
+    G ~~~ H
+
+    %% Batch Section
+    subgraph "2. Batch Risk Analysis Pipeline"
+        direction TB
+        H[(Raw Market Data S3)] --> I[Data Processing]
+        I --> J[(Processed Data S3)]
+        J --> K[Risk Metrics + ML]
+        K --> L[(Risk Metrics S3)]
+    end
+
+    %% Styling
+    style G fill:#ffcccc,stroke:#333,stroke-width:2px
+    style C fill:#e1f5fe,stroke:#01579b
+    style H fill:#f3e5f5,stroke:#4a148c
+    style L fill:#f3e5f5,stroke:#4a148c
+```
 
 ---
 
